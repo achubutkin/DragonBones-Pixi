@@ -53,6 +53,28 @@ export class PixiTextureAtlasData extends TextureAtlasData {
     if (this._renderTexture !== null) {
       for (let k in this.textures) {
         const textureData = this.textures[k] as PixiTextureData;
+        // TODO: 
+        textureData.renderTexture = new Texture(this._renderTexture.baseTexture);
+        textureData.renderTexture.frame = new Rectangle(
+          textureData.region.x,
+          textureData.region.y,
+          textureData.region.width,
+          textureData.region.height
+        );
+        textureData.renderTexture.orig = new Rectangle(
+          textureData.region.x,
+          textureData.region.y,
+          textureData.region.width,
+          textureData.region.height
+        );
+        textureData.renderTexture.trim = new Rectangle(
+          0,
+          0,
+          textureData.region.width,
+          textureData.region.height
+        );
+        textureData.renderTexture.rotate = textureData.rotated ? 2 : 0;
+        /*
         textureData.renderTexture = new Texture({
           source: this._renderTexture.source,
           frame: new Rectangle(
@@ -75,6 +97,7 @@ export class PixiTextureAtlasData extends TextureAtlasData {
           ),
           rotate: textureData.rotated ? 2 : 0,
           });
+        */
       }
     } else {
       for (let k in this.textures) {

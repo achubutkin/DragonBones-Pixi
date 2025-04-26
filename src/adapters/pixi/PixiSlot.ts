@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Filter, Sprite, MeshSimple, Container } from "pixi.js";
+import { Filter, Sprite, SimpleMesh, Container } from "pixi.js";
 
 import { Slot, DisplayFrame } from "../../dragonBones/armature/Slot";
 import { Surface } from "../../dragonBones/armature/Surface";
@@ -87,39 +87,39 @@ export class PixiSlot extends Slot {
     if (this._renderDisplay instanceof PIXI.Sprite) {
       switch (this._blendMode) {
         case BlendMode.Normal:
-          this._renderDisplay.blendMode = 'normal';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.NORMAL;
           break;
 
         case BlendMode.Add:
-          this._renderDisplay.blendMode = 'add';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.ADD;
           break;
 
         case BlendMode.Darken:
-          this._renderDisplay.blendMode = 'darken';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.DARKEN;
           break;
 
         case BlendMode.Difference:
-          this._renderDisplay.blendMode = 'difference';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
           break;
 
         case BlendMode.HardLight:
-          this._renderDisplay.blendMode = 'hard-light';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.HARD_LIGHT;
           break;
 
         case BlendMode.Lighten:
-          this._renderDisplay.blendMode = 'lighten';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.LIGHTEN;
           break;
 
         case BlendMode.Multiply:
-          this._renderDisplay.blendMode = 'multiply';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.MULTIPLY;
           break;
 
         case BlendMode.Overlay:
-          this._renderDisplay.blendMode = 'overlay';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.OVERLAY;
           break;
 
         case BlendMode.Screen:
-          this._renderDisplay.blendMode = 'screen';
+          this._renderDisplay.blendMode = PIXI.BLEND_MODES.SCREEN;
           break;
 
         default:
@@ -133,7 +133,7 @@ export class PixiSlot extends Slot {
     const alpha = this._colorTransform.alphaMultiplier * this._globalAlpha;
     this._renderDisplay.alpha = alpha;
 
-    if (this._renderDisplay instanceof Sprite || this._renderDisplay instanceof MeshSimple) {
+    if (this._renderDisplay instanceof Sprite || this._renderDisplay instanceof PIXI.SimpleMesh) {
       const color = (Math.round(this._colorTransform.redMultiplier * 0xFF) << 16) + (Math.round(this._colorTransform.greenMultiplier * 0xFF) << 8) + Math.round(this._colorTransform.blueMultiplier * 0xFF);
       this._renderDisplay.tint = color;
     }
@@ -177,7 +177,7 @@ export class PixiSlot extends Slot {
           const uvOffset = vertexOffset + vertexCount * 2;
           const scale = this._armature._armatureData.scale;
 
-          const meshDisplay = this._renderDisplay as PIXI.MeshSimple;
+          const meshDisplay = this._renderDisplay as PIXI.SimpleMesh;
 
           const vertices = new Float32Array(vertexCount * 2) as any;
           const uvs = new Float32Array(vertexCount * 2) as any;
@@ -206,8 +206,8 @@ export class PixiSlot extends Slot {
           this._textureScale = 1.0;
           meshDisplay.texture = renderTexture as any;
           meshDisplay.vertices = vertices;
-          meshDisplay.geometry.uvs = uvs;
-          meshDisplay.geometry.indices = indices;
+          meshDisplay.geometry.addAttribute('uvs', uvs, uvs.length);
+          meshDisplay.geometry.addAttribute('indices', indices, indices.length);
 
           const isSkinned = this._geometryData.weight !== null;
           const isSurface = this._parent._boneData.type !== BoneType.Bone;
@@ -229,7 +229,7 @@ export class PixiSlot extends Slot {
     }
 
     if (this._geometryData !== null) {
-      const meshDisplay = this._renderDisplay as PIXI.MeshSimple;
+      const meshDisplay = this._renderDisplay as PIXI.SimpleMesh;
       meshDisplay.texture = null as any;
       meshDisplay.x = 0.0;
       meshDisplay.y = 0.0;
@@ -252,7 +252,8 @@ export class PixiSlot extends Slot {
     const weightData = geometryData.weight;
 
     const hasDeform = deformVertices.length > 0 && geometryData.inheritDeform;
-    const meshDisplay = this._renderDisplay as PIXI.MeshSimple;
+    // TODO:
+    const meshDisplay = this._renderDisplay as PIXI.SimpleMesh;
 
     if (weightData !== null) {
       const data = geometryData.data;

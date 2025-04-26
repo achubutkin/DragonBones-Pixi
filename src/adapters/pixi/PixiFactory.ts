@@ -3,7 +3,7 @@ import * as PIXI from "pixi.js";
 import { PixiArmatureDisplay } from "./PixiArmatureDisplay";
 import { PixiSlot } from "./PixiSlot";
 import { PixiTextureAtlasData, PixiTextureData } from "./PixiTextureAtlasData";
-import { MeshSimple, Sprite, Texture } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { Armature } from "../../dragonBones/armature/Armature";
 import { Slot } from "../../dragonBones/armature/Slot";
 import { BaseObject } from "../../dragonBones/core/BaseObject";
@@ -78,10 +78,10 @@ export class PixiFactory extends BaseFactory {
     super(dataParser);
 
     if (PixiFactory._dragonBonesInstance === null) {
-      const eventManager = new PixiArmatureDisplay(PIXI.Texture.EMPTY);
+      const eventManager = new PixiArmatureDisplay();
       PixiFactory._dragonBonesInstance = new DragonBones(eventManager);
       if (useSharedTicker) {
-        Ticker.shared.add(PixiFactory._clockHandler, PixiFactory);
+        Ticker.shared.add(() => PixiFactory._clockHandler(Ticker.shared), PixiFactory);
       }
     }
 
@@ -103,7 +103,7 @@ export class PixiFactory extends BaseFactory {
 
   protected _buildArmature(dataPackage: BuildArmaturePackage): Armature {
     const armature = BaseObject.borrowObject(Armature);
-    const armatureDisplay = new PixiArmatureDisplay(PIXI.Texture.EMPTY);
+    const armatureDisplay = new PixiArmatureDisplay();
 
     armature.init(
       dataPackage.armature,
@@ -125,9 +125,7 @@ export class PixiFactory extends BaseFactory {
       slotData,
       armature,
       new PIXI.Sprite(Texture.EMPTY),
-      new MeshSimple({
-        texture: Texture.EMPTY,
-      })
+      new PIXI.SimpleMesh(Texture.EMPTY)
     );
 
     return slot;

@@ -1,4 +1,4 @@
-import { ContainerEvents, Point, Ticker } from "pixi.js";
+import { Point, Ticker } from "pixi.js";
 import { PixiArmatureDisplay } from "../PixiArmatureDisplay";
 import { PixiFactory } from "../PixiFactory";
 import BaseDemo from "./BaseDemo";

@@ -11,16 +11,13 @@ export default abstract class BaseDemo {
 
     public constructor(appName: string) {
         this.appName = appName;
-        this.app = new Application();
+        this.app = new Application({ background: '#1099bb', width: window.innerWidth, height: window.innerHeight });
         this.container = new Container();
     }
 
     async init() {
-
-        // Intialize the application.
-        await this.app.init({ background: '#1099bb', width: window.innerWidth, height: window.innerHeight });
         // Then adding the application's canvas to the DOM body.
-        document.body.appendChild(this.app.canvas);
+        document.body.appendChild(this.app.view as any);
         await this._loadResources();
         this._background.texture = this._pixiResources[BaseDemo.BACKGROUND_URL];
         // this.app.stage.setSize(window.innerWidth, window.innerHeight);
@@ -33,7 +30,6 @@ export default abstract class BaseDemo {
     }
 
     async destroy() {
-        this.app.canvas.remove();
         await this.app.destroy();
     }
 

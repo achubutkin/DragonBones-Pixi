@@ -243,9 +243,9 @@ export class DragonBones {
   public constructor(eventManager: IEventDispatcher) {
     this._eventManager = eventManager;
 
-    // console.info(
-    //   `DragonBones: ${DragonBones.VERSION}\nWebsite: http://dragonbones.com/\nSource and Demo: https://github.com/DragonBones/`
-    // );
+    console.info(
+      `DragonBones: ${DragonBones.VERSION}\nWebsite: http://dragonbones.com/\nSource and Demo: https://github.com/DragonBones/`
+    );
   }
 
   public advanceTime(passedTime: number): void {
